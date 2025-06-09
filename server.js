@@ -3,7 +3,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const DATA_PATH = path.join(__dirname, 'data');
 const PRESUPUESTOS_FILE = path.join(DATA_PATH, 'presupuestos.json');
@@ -55,8 +55,7 @@ app.post('/api/articulos', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
 });
 app.put('/api/articulos/:codigo/presentacion', (req, res) => {
   const codigo = req.params.codigo;
