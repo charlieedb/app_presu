@@ -56,7 +56,7 @@ app.post('/api/articulos', (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
-});
+
 app.put('/api/articulos/:codigo/presentacion', (req, res) => {
   const codigo = req.params.codigo;
   const nueva = req.body.presentacion;
