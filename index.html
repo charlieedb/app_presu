@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Presupuestos Charlie</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+	
+
+	<div class="logo-container">
+		<img src="logo.png" alt="Logo Empresa">
+	</div>
+	<div class="tabs">
+		<button class="tab-button" onclick="mostrarTab('presupuestos')">Presupuestos</button>
+		<button class="tab-button" onclick="mostrarTab('articulos')">Artículos</button>
+		<button class="tablinks" onclick="mostrarTab('listado')" id="btnListado" style="display: none;">Listado</button> <!-- Oculto hasta que se haga clic -->
+	</div>
+
+<div id="presupuestos" class="tab-content">
+	<h2 class="titulo-principal">PRESUPUESTOS</h2>
+		<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+		<div>
+			<label for="cliente">Cliente:</label><br>
+			<input type="text" id="cliente" name="cliente">
+		</div>
+		<div>
+			<label for="preventista">Preventista:</label><br>
+			<input type="text" id="preventista" name="preventista">
+		</div>
+		</div>
+		<div class="autocomplete-container">
+			<input type="text" id="producto" placeholder="Buscar producto" oninput="filtrarProductos(event)" onkeydown="navegarLista(event)" autocomplete="off"/>
+			<ul id="sugerencias" class="sugerencias"></ul>
+		</div>
+    <input type="text" id="cantidad" placeholder="Cantidad"/>
+    <input type="number" id="descuento" placeholder="Descuento %"/>
+    <button onclick="agregarProducto()">Agregar</button>
+    <table id="tabla">
+      <thead>
+	   <tr>
+    <th>Producto</th>
+    <th style="text-align:center;">Unid</th>
+    <th style="text-align:center;">Cant. (Cj)</th>
+    <th style="text-align:center;">Desc.</th>
+    <th style="text-align:right;">Total</th>
+    <th style="text-align:center;">Acciones</th>
+  </tr>
+	  </thead>
+      <tbody></tbody>
+    </table>
+   <div id="total-presupuesto" style="margin: 18px 0 10px 0;">
+  <span class="resaltado-total">TOTAL: $<span id="total">0.00</span></span>
+</div>
+	
+	<div class="botones-finales">
+  <button onclick="guardarPresupuesto()">Guardar</button>
+  <button onclick="mostrarUltimoResumen()">Mostrar resumen</button>
+  <button onclick="nuevoPresupuesto()">Nuevo presupuesto</button>
+  <button onclick="verPresupuestos()">Ver presupuestos</button>
+ 
+
+</div>
+    
+ </div>
+
+<div id="articulos" class="tab-content" style="display:none;">
+  <h2 id="contadorArticulos">0 artículos cargados</h2>
+  <input type="file" id="archivoCSV" accept=".csv" />
+  <button onclick="cargarCSV()">Actualizar productos</button>
+  <br><br>
+  <button onclick="mostrarTab('verArticulos')">Ver Artículos</button>
+</div>
+  
+  <div id="verArticulos" class="tab-content" style="display:none;">
+  <h2>Listado de artículos</h2>
+  <table id="tablaProductos" class="productos-table">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Presentación</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button onclick="guardarPresentacionesEnServidor()">💾 Guardar Presentaciones</button>
+</div>
+
+  <script src="script.js"></script>
+  
+  <!-- Ventana Emergente Estilo Ticket -->
+  
+<div id="resumenOverlay" class="overlay" style="display: none;">
+  <div class="resumen-ticket">
+    <div id="resumenContent"></div>
+    <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 1rem;">
+      <button onclick="cerrarResumen()" class="boton-descargar">Cerrar</button>
+      <button onclick="descargarPDF()" class="boton-descargar">Descargar</button>
+    </div>
+  </div>
+</div>
+
+<div id="popupResumen" style="display:none;"></div>
+
+ 
+ <div id="mensajeGuardado" style="display:none;" class="mensaje-ok"></div>
+<!-- Modal Ver Presupuestos -->
+<div id="verPresupuestosOverlay" class="overlay" style="display: none;">
+  <div class="popup">
+    <span class="cerrar" onclick="document.getElementById('verPresupuestosOverlay').style.display='none'">✖</span>
+    <div id="verPresupuestosContent" style="max-height: 70vh; overflow-y: auto;"></div>
+  </div>
+</div>
+
+</body>
+</html>
