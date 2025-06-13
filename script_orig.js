@@ -1,3 +1,4 @@
+
 let productos = JSON.parse(localStorage.getItem("productos")) || [];
 let lista = [];
 let productosSeleccionados = [];
@@ -253,109 +254,6 @@ function mostrarProductos() {
   }, 300); // Le das unos ms para que el spinner se vea aunque la tabla cargue rápido
 }
 
-
-
-  document.getElementById("preventista").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      document.getElementById("producto").focus();
-    }
-  });
-
-  // Navegación de producto/cantidad/descuento por enter
-  const cantidadInput = document.getElementById("cantidad");
-  const descuentoInput = document.getElementById("descuento");
-
-  if (cantidadInput && descuentoInput) {
-    cantidadInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        descuentoInput.focus();
-      }
-    });
-    descuentoInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        setTimeout(() => {
-          agregarProducto();
-          document.getElementById("producto").focus();
-          document.getElementById("producto").select();
-        }, 50);
-      }
-    });
-  } else {
-    console.warn("⚠️ No se encontraron los campos de cantidad o descuento al cargar.");
-  }
-
-  // Eventos para autocompletar productos
-  document.getElementById("producto").addEventListener("input", filtrarProductos);
-  document.getElementById("producto").addEventListener("keydown", navegarLista);
-
-  // --- Login modal lógica ---
-  document.getElementById("btn-login").addEventListener("click", () => {
-    document.getElementById("login-modal").style.display = "flex";
-    document.getElementById("login-user").focus();
-  });
-  document.getElementById("login-cerrar").addEventListener("click", () => {
-    document.getElementById("login-modal").style.display = "none";
-    document.getElementById("login-error").textContent = "";
-  });
-  document.getElementById("login-confirmar").addEventListener("click", loginVerificar);
-  document.getElementById("login-pass").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") loginVerificar();
-  });
-
-  mostrarPestañaArticulos(false); // Oculta la pestaña artículos al iniciar
-
-function mostrarPestañaArticulos(mostrar) {
-  const tabArticulos = document.querySelector('button[data-tab="articulos"]');
-  const tabPresupuestos = document.querySelector('button[data-tab="presupuestos"]');
-  const tabArticulosView = document.querySelector('button[data-tab="articulosview"]');
-
-  if (tabArticulos) tabArticulos.style.display = mostrar ? "inline-block" : "none";
-  if (tabArticulosView) tabArticulosView.style.display = mostrar ? "inline-block" : "none";
-
-  // Por si estabas en "artículos" y cerrás sesión
-  const tabContenidoArt = document.getElementById("tab-articulos");
-  const tabContenidoArtView = document.getElementById("tab-articulosview");
-
-  if (!mostrar && (tabContenidoArt?.style.display === "block" || tabContenidoArtView?.style.display === "block")) {
-    mostrarTab("presupuestos");
-  }
-}
-
-  // Cliente: con enter salta a Preventista
-  document.getElementById("cliente").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      document.getElementById("preventista").focus();
-    }
-  });
-
-  // Preventista: con enter salta a Producto
-  document.getElementById("preventista").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      document.getElementById("producto").focus();
-    }
-  });
-
-
-
-
-// --- Login modal lógica ---
-document.getElementById("btn-login").addEventListener("click", () => {
-  document.getElementById("login-modal").style.display = "flex";
-  document.getElementById("login-user").focus();
-});
-document.getElementById("login-cerrar").addEventListener("click", () => {
-  document.getElementById("login-modal").style.display = "none";
-  document.getElementById("login-error").textContent = "";
-});
-document.getElementById("login-confirmar").addEventListener("click", loginVerificar);
-document.getElementById("login-pass").addEventListener("keydown", (e) => {
-  if (e.key === "Enter") loginVerificar();
-});
 function loginVerificar() {
   const user = document.getElementById("login-user").value.trim();
   const pass = document.getElementById("login-pass").value.trim();
@@ -371,39 +269,20 @@ function loginVerificar() {
     document.getElementById("login-error").textContent = "Usuario o contraseña incorrectos";
   }
 }
-// Logout
-document.getElementById("btn-logout").addEventListener("click", () => {
-  esAdmin = false;
-  document.getElementById("btn-login").style.display = "inline-block";
-  document.getElementById("admin-badge").style.display = "none";
-  document.getElementById("btn-logout").style.display = "none";
-  mostrarPestañaArticulos(false);
-});
-// Función para ocultar/mostrar la pestaña artículos
 
+
+function mostrarPestañaArticulos(mostrar) {
+  const tabArticulos = document.querySelector('button[data-tab="articulos"]');
+  const tabPresupuestos = document.querySelector('button[data-tab="presupuestos"]');
+  const tabArticulosView = document.querySelector('button[data-tab="articulosview"]');
+  if (tabArticulos) tabArticulos.style.display = mostrar ? "inline-block" : "none";
+  if (tabArticulosView) tabArticulosView.style.display = mostrar ? "inline-block" : "none";
+  // Si sale el admin y estaba en esa pestaña, te manda a presupuestos
+  if (!mostrar && (document.getElementById("tab-articulos").style.display === "block" || (tabArticulosView && document.getElementById("tab-articulosview").style.display === "block"))) {
+    mostrarTab("presupuestos");
+  }
+}
 mostrarPestañaArticulos(false); // Oculta al iniciar
-
-function eliminarProducto(index) {
-  lista.splice(index, 1);
-  actualizarTabla();
-}
-
-function editarProducto(index) {
-  const producto = lista[index];
-  document.getElementById("producto").value = producto.nombre;
-  document.getElementById("cantidad").value = producto.cantidad;
-  document.getElementById("descuento").value = producto.descuento;
-
-  lista.splice(index, 1); // lo sacamos para volver a agregar corregido
-  actualizarTabla();
-
-  // Hacer foco en la cantidad
-  setTimeout(() => {
-    document.getElementById("cantidad").focus();
-    document.getElementById("cantidad").select();
-  }, 50);
-}
-
 
   if (cantidadInput && descuentoInput) {
     cantidadInput.addEventListener("keydown", function (e) {
@@ -562,10 +441,10 @@ function mostrarUltimoResumen() {
     });
 }
 
-
 function cerrarResumen() {
   document.getElementById("resumenOverlay").style.display = "none";
 }
+
 function descargarPDF() {
   const resumen = document.getElementById("resumenContent");
   const ventana = window.open('', '_blank');
@@ -588,7 +467,6 @@ function descargarPDF() {
   ventana.focus();
   ventana.print(); // Esto abre la opción de guardar como PDF
 }
-
 
 function nuevoPresupuesto() {
   // Limpiamos campos de cliente y preventista
@@ -671,8 +549,6 @@ function verPresupuestos() {
     });
 }
 
-
-
 function mostrarResumenDesdeLista(indice) {
   fetch('/api/presupuestos')
     .then(res => res.json())
@@ -683,6 +559,7 @@ function mostrarResumenDesdeLista(indice) {
       }
     });
 }
+
 function mostrarMensajeGuardado() {
   const mensaje = document.getElementById("mensajeGuardado");
   mensaje.innerText = "✅ Presupuesto guardado correctamente";
@@ -705,6 +582,7 @@ function actualizarPresentacionLocal(codigo, nuevaPresentacion) {
     localStorage.setItem("productos", JSON.stringify(productos));
   }
 }
+
 function guardarPresentacionesEnServidor() {
   fetch('/api/articulos', {
     method: 'POST',
@@ -719,57 +597,51 @@ function guardarPresentacionesEnServidor() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // pestañas
   mostrarTab("presupuestos");
 
-  // spinner + carga de artículos
-  document.getElementById("spinner-articulos").style.display = "none";
-  document.querySelector('button[data-tab="articulos"]').addEventListener("click", () => {
-    const spinner = document.getElementById("spinner-articulos");
-    spinner.innerHTML = '<span class="spinner"></span>';
-    spinner.style.display = 'inline-block';
-
-    setTimeout(() => {
-      mostrarProductos();
-      spinner.style.display = 'none';
-    }, 300);
-  });
-
-  // autocomplete de productos
-  const inpProd = document.getElementById("producto");
-  inpProd.addEventListener("input", filtrarProductos);
-  inpProd.addEventListener("keydown", navegarLista);
-
-  // navegación con ENTER entre campos
-  document.getElementById("cliente").addEventListener("keydown", e => {
+  // Focus por enter entre campos (cliente → preventista → producto)
+  document.getElementById("cliente").addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
       e.preventDefault();
       document.getElementById("preventista").focus();
     }
   });
-  document.getElementById("preventista").addEventListener("keydown", e => {
+  document.getElementById("preventista").addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      inpProd.focus();
-    }
-  });
-  const cant = document.getElementById("cantidad");
-  const desc = document.getElementById("descuento");
-  cant.addEventListener("keydown", e => {
-    if (e.key === "Enter") { e.preventDefault(); desc.focus(); }
-  });
-  desc.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      setTimeout(() => {
-        agregarProducto();
-        inpProd.focus();
-        inpProd.select();
-      }, 50);
+      document.getElementById("producto").focus();
     }
   });
 
-  // login/logout
+  // Navegación de producto/cantidad/descuento por enter
+  const cantidadInput = document.getElementById("cantidad");
+  const descuentoInput = document.getElementById("descuento");
+
+  if (cantidadInput && descuentoInput) {
+    cantidadInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        descuentoInput.focus();
+      }
+    });
+
+    descuentoInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        setTimeout(() => {
+          agregarProducto();
+          document.getElementById("producto").focus();
+          document.getElementById("producto").select();
+        }, 50);
+      }
+    });
+  }
+
+  // Eventos para autocompletar productos
+  document.getElementById("producto").addEventListener("input", filtrarProductos);
+  document.getElementById("producto").addEventListener("keydown", navegarLista);
+
+  // Login modal lógica
   document.getElementById("btn-login").addEventListener("click", () => {
     document.getElementById("login-modal").style.display = "flex";
     document.getElementById("login-user").focus();
@@ -779,9 +651,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("login-error").textContent = "";
   });
   document.getElementById("login-confirmar").addEventListener("click", loginVerificar);
-  document.getElementById("login-pass").addEventListener("keydown", e => {
+  document.getElementById("login-pass").addEventListener("keydown", (e) => {
     if (e.key === "Enter") loginVerificar();
   });
+
   document.getElementById("btn-logout").addEventListener("click", () => {
     esAdmin = false;
     document.getElementById("btn-login").style.display = "inline-block";
@@ -789,5 +662,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btn-logout").style.display = "none";
     mostrarPestañaArticulos(false);
   });
-  mostrarPestañaArticulos(false);
+
+  mostrarPestañaArticulos(false); // Oculta la pestaña artículos al iniciar
 });
